@@ -1,36 +1,101 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
-<script src="sidebar.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlaaDev - الصفحة الرئيسية</title>
+    <title>AlaaDev Hub</title>
     
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    
     <style>
+        /* CSS Variables for Dark/Light Mode */
+        :root {
+            /* Dark Mode (Default) */
+            --bg-body: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --sidebar-bg: #1e293b;
+            --sidebar-border: #334155;
+            --sidebar-active: #0f172a;
+            --card-hover: rgba(51, 65, 85, 0.8);
+            --fog-1: rgba(59, 130, 246, 0.15);
+            --fog-2: rgba(99, 102, 241, 0.15);
+        }
+
+        [data-theme="light"] {
+            /* Light Mode */
+            --bg-body: #f4f8fc;
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --sidebar-bg: #ffffff;
+            --sidebar-border: #e2e8f0;
+            --sidebar-active: #eff6ff;
+            --card-hover: rgba(255, 255, 255, 0.95);
+            --fog-1: rgba(59, 130, 246, 0.22);
+            --fog-2: rgba(96, 165, 250, 0.18);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
-            background-color: #f4f8fc;
-            color: #1e293b;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
-            position: relative;
+            display: flex;
+        }
+
+        /* Top Controls (Theme & Lang) */
+        .top-controls {
+            position: fixed;
+            top: 1.5rem;
+            inset-inline-end: 1.5rem;
+            z-index: 100;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .control-btn {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 1rem;
+            background-color: var(--glass-bg);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            font-weight: 700;
+        }
+        .control-btn:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
         }
 
+        /* Background Fog */
         .blue-fog {
             position: fixed;
             border-radius: 50%;
@@ -39,410 +104,580 @@
             z-index: 0;
         }
         .fog-top-right {
-            background: rgba(59, 130, 246, 0.22);
-            width: 450px;
-            height: 450px;
-            top: -120px;
-            right: -120px;
+            background: var(--fog-1);
+            width: 450px; height: 450px;
+            top: -120px; right: -120px;
         }
         .fog-bottom-left {
-            background: rgba(96, 165, 250, 0.18);
-            width: 400px;
-            height: 400px;
-            bottom: -120px;
-            left: -120px;
+            background: var(--fog-2);
+            width: 400px; height: 400px;
+            bottom: -120px; left: -120px;
         }
 
+        /* Sidebar Styles */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 1.5rem;
+            inset-inline-start: 1.5rem;
+            z-index: 60;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 1rem;
+            background-color: var(--glass-bg);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            inset-inline-start: 0;
+            height: 100%;
+            width: 20rem;
+            background-color: var(--sidebar-bg);
+            border-inline-end: 1px solid var(--sidebar-border);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .sidebar-logo {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .sidebar-logo img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        .sidebar-title h2 { font-weight: 900; font-size: 1.25rem; }
+        .sidebar-badge {
+            font-size: 0.75rem;
+            background-color: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+        }
+
+        .sidebar-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            padding-inline-start: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            background-color: var(--sidebar-active);
+        }
+
+        .nav-link.active {
+            background-color: var(--sidebar-active);
+            color: var(--primary);
+            border-color: var(--glass-border);
+            font-weight: 700;
+        }
+
+        .nav-link i { width: 1.5rem; text-align: center; }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-inline-start: 20rem; /* Space for sidebar */
+            padding: 6rem 2rem 2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        .content-section {
+            display: none;
+            width: 100%;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .content-section.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Glass Cards */
         .glass-card {
-            background: rgba(255, 255, 255, 0.88);
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 25px 50px -12px rgba(30, 64, 175, 0.12);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             width: 100%;
-            max-width: 28rem;
+            max-width: 32rem;
             border-radius: 2.5rem;
-            padding: 1.5rem;
+            padding: 3rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            position: relative;
-            z-index: 10;
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            margin: auto;
         }
 
-        @media (min-width: 640px) {
-            .glass-card {
-                max-width: 32rem;
-                padding: 2.5rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .glass-card {
-                padding: 3rem;
-            }
-        }
-
-        .logo-box {
-            width: 6rem;
-            height: 6rem;
+        /* Common Elements inside Cards */
+        .icon-box-large {
+            width: 7rem;
+            height: 7rem;
             border-radius: 1.6rem;
-            background: #ffffff;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background: var(--sidebar-bg);
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 1.5rem;
-            border: 1px solid #ffffff;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards;
-            opacity: 0;
-        }
-
-        @media (min-width: 640px) {
-            .logo-box {
-                width: 7rem;
-                height: 7rem;
-                margin-bottom: 2rem;
-            }
-        }
-
-        .logo-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-box .glow-bg {
-            position: absolute;
-            inset: 0;
-            border-radius: 1.6rem;
-            background: rgba(59, 130, 246, 0.2);
-            filter: blur(8px);
-            transition: all 0.3s ease;
-        }
-
-        .logo-box:hover .glow-bg {
-            background: rgba(59, 130, 246, 0.3);
-        }
-
-        .logo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: relative;
-            z-index: 10;
-            transition: transform 0.3s ease;
-        }
-
-        .logo-box:hover img {
-            transform: scale(1.05);
-        }
-
-        .logo-box .tooltip {
-            position: absolute;
-            bottom: -1.75rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #2563eb;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 0.125rem 0.625rem;
-            border-radius: 9999px;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            white-space: nowrap;
-            z-index: 20;
-        }
-
-        .logo-box:hover .tooltip {
-            opacity: 1;
+            border: 1px solid var(--glass-border);
+            font-size: 3rem;
+            color: var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
 
         .main-title {
-            font-size: 1.875rem;
+            font-size: 2.25rem;
             font-weight: 900;
-            margin-bottom: 0.75rem;
-            letter-spacing: -0.025em;
-            text-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
-            opacity: 0;
+            margin-bottom: 0.5rem;
+        }
+        .text-primary { color: var(--primary); }
+        .text-outline {
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--text-main);
         }
 
-        @media (min-width: 640px) {
-            .main-title {
-                font-size: 2.25rem;
-                margin-bottom: 1rem;
-            }
+        .subtitle {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
         }
 
-        @media (min-width: 768px) {
-            .main-title {
-                font-size: 3rem;
-            }
-        }
-
-        .main-title .color-blue {
-            color: #2563eb;
-        }
-
-        .hub-text {
-            color: #ffffff;
-            -webkit-text-stroke: 1.5px #000000;
-            text-stroke: 1.5px #000000;
-            paint-order: stroke fill;
-        }
-
-        .main-desc {
+        .description {
             font-size: 1rem;
-            font-weight: 500;
-            color: #64748b;
-            margin-bottom: 1.5rem;
-            max-width: 18rem;
             line-height: 1.6;
-            transition: all 0.3s ease;
-            min-height: 3rem;
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 300ms forwards;
-            opacity: 0;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
         }
 
-        @media (min-width: 640px) {
-            .main-desc {
-                font-size: 1.125rem;
-                max-width: 22rem;
-                margin-bottom: 2rem;
-            }
-        }
-
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 0.8s infinite;
-            color: #3b82f6;
-            font-weight: bold;
-            margin-right: 2px;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .bio-card {
-            display: none;
+        /* List Items (Addons & Contact) */
+        .list-container {
             width: 100%;
-            margin-bottom: 1.5rem;
-            text-align: right;
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .bio-card.show {
-            display: block;
-        }
-
-        .bio-glass {
-            background: rgba(239, 246, 255, 0.75);
-            border: 1px solid rgba(191, 219, 254, 0.8);
-            padding: 1.25rem;
+        .list-card {
+            background: var(--sidebar-bg);
+            border: 1px solid var(--glass-border);
+            padding: 1rem;
             border-radius: 1rem;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            border-right: 4px solid #2563eb;
-        }
-
-        .bio-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+        .list-card:hover {
+            background: var(--card-hover);
+            transform: translateY(-2px);
         }
 
-        .bio-header h3 {
-            font-weight: 900;
-            font-size: 1rem;
-            color: #1e3a8a;
+        .list-info {
             display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-align: start;
+        }
+
+        .item-icon {
+            width: 3rem; height: 3rem;
+            border-radius: 0.75rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        @media (min-width: 640px) {
-            .bio-header h3 {
-                font-size: 1.125rem;
-            }
-        }
-
-        .bio-header button {
-            background: none;
             border: none;
-            color: #94a3b8;
             cursor: pointer;
-            font-size: 1.125rem;
-            padding: 0.25rem;
         }
-
-        .bio-header button:hover {
-            color: #475569;
-        }
-
-        .bio-text {
-            font-size: 0.875rem;
-            color: #475569;
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        @media (min-width: 640px) {
-            .bio-text {
-                font-size: 1rem;
-            }
-        }
-
-        .bio-text span {
-            color: #1d4ed8;
-            font-weight: 700;
-        }
-
-        .buttons-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.875rem;
-            width: 100%;
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 400ms forwards;
-            opacity: 0;
-        }
-
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            font-weight: 700;
-            padding: 0.875rem 1.5rem;
-            border-radius: 1rem;
-            font-size: 1rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        @media (min-width: 640px) {
-            .btn {
-                font-size: 1.125rem;
-                padding: 1rem 1.5rem;
-            }
-        }
+        .btn-primary:hover { background-color: var(--primary-hover); }
 
         .btn-discord {
             background-color: #5865F2;
-            color: #ffffff;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .btn-discord:hover { background-color: #4752C4; }
+
+        .status-badge {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
         }
 
-        .btn-discord:hover {
-            background-color: #4752C4;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-contact {
-            background-color: #ffffff;
-            color: #334155;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-
-        .btn-contact:hover {
-            background-color: #f8fafc;
-        }
-
+        /* Animations */
         @keyframes fadeInUp {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .mobile-menu-btn { display: flex; }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            [dir="rtl"] .sidebar {
+                transform: translateX(100%);
+            }
+            .sidebar.show { transform: translateX(0); }
+            .main-content {
+                margin-inline-start: 0;
+                padding: 6rem 1rem 2rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- Background Fog -->
     <div class="blue-fog fog-top-right"></div>
     <div class="blue-fog fog-bottom-left"></div>
 
-    <main class="glass-card">
-        
-        <div id="logo-btn" onclick="toggleBio()" class="logo-box">
-            <div class="glow-bg"></div>
-            <img src="1.png" alt="AlaaDev Logo">
-            <span class="tooltip">انقر لعرض النبذة</span>
-        </div>
+    <!-- Top Controls -->
+    <div class="top-controls">
+        <button class="control-btn" onclick="toggleTheme()" id="theme-btn">
+            <i class="fa-solid fa-sun"></i>
+        </button>
+        <button class="control-btn" onclick="toggleLang()" id="lang-btn">عربي</button>
+    </div>
 
-        <h1 class="main-title">
-            <span class="color-blue">AlaaDev</span> 
-            <span class="hub-text">Hub</span>
-        </h1>
-        
-        <p id="main-desc" class="main-desc typing-cursor"></p>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
 
-        <div id="bio-card" class="bio-card">
-            <div class="bio-glass">
-                <div class="bio-header">
-                    <h3>
-                        <i class="fa-solid fa-user-gear" style="color: #2563eb;"></i> نبذة عني
-                    </h3>
-                    <button onclick="toggleBio()">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                <p class="bio-text">
-                    أنا <span>علاء</span>، مطور ألعاب ومطور ويب شغوف. أمتلك خبرة واسعة في بناء التطبيقات التفاعلية، تصميم واجهات المستخدم العصرية، وتحويل الأفكار المعقدة إلى برمجيات سلسة ذات أداء عالي.
-                </p>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-code"></i>
+            </div>
+            <div class="sidebar-title">
+                <h2>AlaaDev <span class="sidebar-badge">Hub</span></h2>
             </div>
         </div>
+        
+        <div class="sidebar-body">
+            <div>
+                <div class="nav-section-title" class="lang-text" data-en="Main" data-ar="الرئيسية">Main</div>
+                <a onclick="switchSection('home')" class="nav-link active" id="nav-home">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="lang-text" data-en="Home Page" data-ar="الصفحة الرئيسية">Home Page</span>
+                </a>
+                <a onclick="switchSection('contact')" class="nav-link" id="nav-contact">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span class="lang-text" data-en="Contact" data-ar="التواصل">Contact</span>
+                </a>
+                <a onclick="switchSection('community')" class="nav-link" id="nav-community">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="lang-text" data-en="Community" data-ar="المجتمع">Community</span>
+                </a>
+            </div>
 
-        <div class="buttons-container">
-            <a href="community.html" class="btn btn-discord">
-                <i class="fa-brands fa-discord" style="font-size: 1.25rem;"></i>
-                <span>إنضم لمجتمعنا</span>
-            </a>
-
-            <a href="contact.html" class="btn btn-contact">
-                <i class="fa-regular fa-envelope" style="font-size: 1.125rem; color: #3b82f6;"></i>
-                <span>تواصل معنا</span>
-            </a>
+            <div>
+                <div class="nav-section-title" class="lang-text" data-en="Content & Sections" data-ar="المحتوى والأقسام">Content & Sections</div>
+                <a onclick="switchSection('events')" class="nav-link" id="nav-events">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span class="lang-text" data-en="Events" data-ar="فعاليات">Events</span>
+                </a>
+                <a onclick="switchSection('theater')" class="nav-link" id="nav-theater">
+                    <i class="fa-solid fa-masks-theater"></i>
+                    <span class="lang-text" data-en="Theater" data-ar="مسرح">Theater</span>
+                </a>
+                <a onclick="switchSection('addons')" class="nav-link" id="nav-addons">
+                    <i class="fa-solid fa-puzzle-piece"></i>
+                    <span class="lang-text" data-en="Addons" data-ar="الإضافات">Addons</span>
+                </a>
+            </div>
         </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Home Section -->
+        <section id="home" class="content-section active">
+            <div class="glass-card">
+                <div class="icon-box-large">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <h1 class="main-title">
+                    <span class="text-primary">AlaaDev</span> 
+                    <span class="text-outline">Hub</span>
+                </h1>
+                <p class="description lang-text" data-en="Welcome to AlaaDev Hub. Your central hub for all my projects, events, and community updates." data-ar="مرحباً بك في منصة AlaaDev Hub. المركز الرئيسي لجميع مشاريعي، الفعاليات، وتحديثات المجتمع.">
+                    Welcome to AlaaDev Hub. Your central hub for all my projects, events, and community updates.
+                </p>
+                <button class="btn-primary" onclick="switchSection('addons')">
+                    <i class="fa-solid fa-compass"></i>
+                    <span class="lang-text" data-en="Explore Now" data-ar="اكتشف الآن">Explore Now</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="content-section">
+            <div class="glass-card">
+                <div class="icon-box-large"><i class="fa-solid fa-envelope"></i></div>
+                <h1 class="main-title">
+                    <span class="text-primary lang-text" data-en="Contact" data-ar="تواصل">Contact</span> 
+                    <span class="text-outline lang-text" data-en="Us" data-ar="معنا">Us</span>
+                </h1>
+                <p class="description lang-text" data-en="I'd love to hear your thoughts or answer your inquiries through the following channels." data-ar="يسعدني سماع أفكارك أو الإجابة على استفساراتك عبر القنوات التالية.">
+                    I'd love to hear your thoughts or answer your inquiries through the following channels.
+                </p>
+                <div class="list-container">
+                    <div class="list-card">
+                        <div class="list-info">
+                            <div class="item-icon" style="background: rgba(59,130,246,0.2); color: #3b82f6;"><i class="fa-solid fa-envelope"></i></div>
+                            <div>
+                                <div class="lang-text" style="font-size: 0.75rem; color: var(--text-muted);" data-en="Email" data-ar="البريد الإلكتروني">Email</div>
+                                <div style="font-weight: 700;">alaacoder128@gmail.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://youtube.com/@alaa-dev" target="_blank" class="list-card">
+                        <div class="list-info">
+                            <div class="item-icon" style="background: rgba(239,68,68,0.2); color: #ef4444;"><i class="fa-brands fa-youtube"></i></div>
+                            <div>
+                                <div class="lang-text" style="font-size: 0.75rem; color: var(--text-muted);" data-en="YouTube" data-ar="يوتيوب">YouTube</div>
+                                <div style="font-weight: 700;">@alaa-dev</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section id="community" class="content-section">
+            <div class="glass-card">
+                <div class="icon-box-large" style="color: #5865F2;"><i class="fa-brands fa-discord"></i></div>
+                <h1 class="main-title">
+                    <span class="text-outline">AlaaDev</span> 
+                    <span style="color: #5865F2;">Discord</span>
+                </h1>
+                <div class="subtitle lang-text" data-en="Developers and Designers Community" data-ar="مجتمع المطورين والمصممين">Developers and Designers Community</div>
+                <p class="description lang-text" data-en="Join our Discord community to share your ideas, develop your projects, and connect with other developers." data-ar="انضم إلينا في مجتمع ديسكورد لتشارك أفكارك، تطور مشاريعك، وتتواصل مع المطورين الآخرين.">
+                    Join our Discord community to share your ideas, develop your projects, and connect with other developers.
+                </p>
+                <a href="https://discord.gg/vBSkUcsCX" target="_blank" class="btn-discord">
+                    <i class="fa-brands fa-discord" style="font-size: 1.5rem;"></i>
+                    <span class="lang-text" data-en="Join Discord Server" data-ar="الانضمام إلى سيرفر ديسكورد">Join Discord Server</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="content-section">
+            <div class="glass-card">
+                <div class="icon-box-large"><i class="fa-solid fa-calendar-days"></i></div>
+                <h1 class="main-title">
+                    <span class="text-primary lang-text" data-en="Events" data-ar="الفعاليات">Events</span> 
+                    <span class="text-outline lang-text" data-en="& Activities" data-ar="والأنشطة">& Activities</span>
+                </h1>
+                <div class="status-badge lang-text" data-en="No active events right now" data-ar="لا توجد فعالية الآن">No active events right now</div>
+                <p class="description lang-text" data-en="There are no active events or competitions at the moment. Keep following us to be the first to know!" data-ar="لا توجد أي فعاليات أو مسابقات نشطة في الوقت الحالي. تابعنا دائماً لتكون أول من يعلم عند إطلاق فعاليات جديدة!">
+                    There are no active events or competitions at the moment. Keep following us to be the first to know!
+                </p>
+            </div>
+        </section>
+
+        <!-- Theater Section -->
+        <section id="theater" class="content-section">
+            <div class="glass-card">
+                <div class="icon-box-large"><i class="fa-solid fa-masks-theater"></i></div>
+                <h1 class="main-title">
+                    <span class="text-primary lang-text" data-en="Theater" data-ar="مسرح">Theater</span> 
+                    <span class="text-outline">AlaaDev</span>
+                </h1>
+                <div class="status-badge lang-text" data-en="Coming Soon" data-ar="سيُتوّفر قريباً">Coming Soon</div>
+                <p class="description lang-text" data-en="We are currently preparing special shows, events, and interactive experiences that will be displayed here very soon!" data-ar="نعمل حالياً على تجهيز عروض وفعاليات وتجارب تفاعلية مميزة ستعرض هنا قريباً جداً. ترقبوا المفاجآت!">
+                    We are currently preparing special shows, events, and interactive experiences that will be displayed here very soon!
+                </p>
+            </div>
+        </section>
+
+        <!-- Addons Section -->
+        <section id="addons" class="content-section">
+            <div class="glass-card">
+                <div class="icon-box-large"><i class="fa-solid fa-puzzle-piece"></i></div>
+                <h1 class="main-title">
+                    <span class="text-primary lang-text" data-en="Addons" data-ar="الإضافات">Addons</span> 
+                    <span class="text-outline lang-text" data-en="& Mods" data-ar="والمودات">& Mods</span>
+                </h1>
+                <div class="subtitle lang-text" data-en="Latest files and programs available for download" data-ar="أحدث الملفات والبرامج المتاحة للتحميل">Latest files and programs available for download</div>
+                
+                <div class="list-container">
+                    <div class="list-card">
+                        <div class="list-info">
+                            <div class="item-icon" style="background: rgba(16,185,129,0.2); color: #10b981;"><i class="fa-solid fa-cube"></i></div>
+                            <div>
+                                <div class="lang-text" style="font-size: 0.75rem; color: var(--text-muted);" data-en="Minecraft Game" data-ar="لعبة ماين كرافت">Minecraft Game</div>
+                                <div style="font-weight: 700;" class="lang-text" data-en="Minecraft Mod" data-ar="مود ماين كرافت">Minecraft Mod</div>
+                            </div>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1SV0NS7xsUXwRRc7Gd0Hz-oJ346NV-1XB/view" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-download"></i>
+                        </a>
+                    </div>
+
+                    <div class="list-card">
+                        <div class="list-info">
+                            <div class="item-icon" style="background: rgba(239,68,68,0.2); color: #ef4444;"><i class="fa-solid fa-circle-down"></i></div>
+                            <div>
+                                <div class="lang-text" style="font-size: 0.75rem; color: var(--text-muted);" data-en="Download Tool" data-ar="أداة تحميل">Download Tool</div>
+                                <div style="font-weight: 700;" class="lang-text" data-en="YouTube Downloader" data-ar="برنامج يوتيوب">YouTube Downloader</div>
+                            </div>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1F4tcUBL5P2og6UVW8ZgMeDtsbczjY5nO/view" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <script>
-        const textToType = "مساحة الإبداع والتطوير. نبرمج الأفكار ونبني عوالم رقمية متكاملة.";
-        let charIndex = 0;
-        const speed = 45;
+        // --- 1. SPA Navigation Logic ---
+        function switchSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('nav-' + sectionId).classList.add('active');
 
-        function typeWriter() {
-            if (charIndex < textToType.length) {
-                document.getElementById("main-desc").textContent += textToType.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeWriter, speed);
+            if(window.innerWidth <= 1024) {
+                document.getElementById('sidebar').classList.remove('show');
             }
         }
 
-        window.addEventListener('load', () => {
-            setTimeout(typeWriter, 500);
-        });
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
 
-        function toggleBio() {
-            const bioCard = document.getElementById('bio-card');
-            const mainDesc = document.getElementById('main-desc');
-
-            bioCard.classList.toggle('show');
+        // --- 2. Theme Toggle Logic (Dark by default) ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeBtnIcon = document.querySelector('#theme-btn i');
             
-            if (bioCard.classList.contains('show')) {
-                mainDesc.style.opacity = '0.3';
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                themeBtnIcon.className = 'fa-solid fa-moon';
             } else {
-                mainDesc.style.opacity = '1';
+                html.setAttribute('data-theme', 'dark');
+                themeBtnIcon.className = 'fa-solid fa-sun';
             }
+        }
+
+        // --- 3. Language Toggle Logic (English by default) ---
+        let currentLang = 'en';
+        function toggleLang() {
+            const html = document.documentElement;
+            const langBtn = document.getElementById('lang-btn');
+            
+            if (currentLang === 'en') {
+                currentLang = 'ar';
+                html.setAttribute('dir', 'rtl');
+                html.setAttribute('lang', 'ar');
+                langBtn.innerText = 'English';
+            } else {
+                currentLang = 'en';
+                html.setAttribute('dir', 'ltr');
+                html.setAttribute('lang', 'en');
+                langBtn.innerText = 'عربي';
+            }
+
+            // Update all translatable texts
+            document.querySelectorAll('.lang-text').forEach(el => {
+                el.innerText = el.getAttribute('data-' + currentLang);
+            });
         }
     </script>
-
 </body>
 </html>
-
