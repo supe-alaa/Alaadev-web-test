@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<script src="sidebar.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlaaDev - الصفحة الرئيسية</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: #f4f8fc;
+            color: #1e293b;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .blue-fog {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .fog-top-right {
+            background: rgba(59, 130, 246, 0.22);
+            width: 450px;
+            height: 450px;
+            top: -120px;
+            right: -120px;
+        }
+        .fog-bottom-left {
+            background: rgba(96, 165, 250, 0.18);
+            width: 400px;
+            height: 400px;
+            bottom: -120px;
+            left: -120px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 25px 50px -12px rgba(30, 64, 175, 0.12);
+            width: 100%;
+            max-width: 28rem;
+            border-radius: 2.5rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            margin: auto;
+        }
+
+        @media (min-width: 640px) {
+            .glass-card {
+                max-width: 32rem;
+                padding: 2.5rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .glass-card {
+                padding: 3rem;
+            }
+        }
+
+        .logo-box {
+            width: 6rem;
+            height: 6rem;
+            border-radius: 1.6rem;
+            background: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ffffff;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards;
+            opacity: 0;
+        }
+
+        @media (min-width: 640px) {
+            .logo-box {
+                width: 7rem;
+                height: 7rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        .logo-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-box .glow-bg {
+            position: absolute;
+            inset: 0;
+            border-radius: 1.6rem;
+            background: rgba(59, 130, 246, 0.2);
+            filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .logo-box:hover .glow-bg {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-box:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-box .tooltip {
+            position: absolute;
+            bottom: -1.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #2563eb;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.125rem 0.625rem;
+            border-radius: 9999px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            white-space: nowrap;
+            z-index: 20;
+        }
+
+        .logo-box:hover .tooltip {
+            opacity: 1;
+        }
+
+        .main-title {
+            font-size: 1.875rem;
+            font-weight: 900;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.025em;
+            text-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+            opacity: 0;
+        }
+
+        @media (min-width: 640px) {
+            .main-title {
+                font-size: 2.25rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .main-title {
+                font-size: 3rem;
+            }
+        }
+
+        .main-title .color-blue {
+            color: #2563eb;
+        }
+
+        .hub-text {
+            color: #ffffff;
+            -webkit-text-stroke: 1.5px #000000;
+            text-stroke: 1.5px #000000;
+            paint-order: stroke fill;
+        }
+
+        .main-desc {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            max-width: 18rem;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            min-height: 3rem;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 300ms forwards;
+            opacity: 0;
+        }
+
+        @media (min-width: 640px) {
+            .main-desc {
+                font-size: 1.125rem;
+                max-width: 22rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+            color: #3b82f6;
+            font-weight: bold;
+            margin-right: 2px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .bio-card {
+            display: none;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            text-align: right;
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .bio-card.show {
+            display: block;
+        }
+
+        .bio-glass {
+            background: rgba(239, 246, 255, 0.75);
+            border: 1px solid rgba(191, 219, 254, 0.8);
+            padding: 1.25rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            border-right: 4px solid #2563eb;
+        }
+
+        .bio-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .bio-header h3 {
+            font-weight: 900;
+            font-size: 1rem;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .bio-header h3 {
+                font-size: 1.125rem;
+            }
+        }
+
+        .bio-header button {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.125rem;
+            padding: 0.25rem;
+        }
+
+        .bio-header button:hover {
+            color: #475569;
+        }
+
+        .bio-text {
+            font-size: 0.875rem;
+            color: #475569;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        @media (min-width: 640px) {
+            .bio-text {
+                font-size: 1rem;
+            }
+        }
+
+        .bio-text span {
+            color: #1d4ed8;
+            font-weight: 700;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+            width: 100%;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 400ms forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            padding: 0.875rem 1.5rem;
+            border-radius: 1rem;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 640px) {
+            .btn {
+                font-size: 1.125rem;
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        .btn-discord {
+            background-color: #5865F2;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-discord:hover {
+            background-color: #4752C4;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-contact {
+            background-color: #ffffff;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-contact:hover {
+            background-color: #f8fafc;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blue-fog fog-top-right"></div>
+    <div class="blue-fog fog-bottom-left"></div>
+
+    <main class="glass-card">
+        
+        <div id="logo-btn" onclick="toggleBio()" class="logo-box">
+            <div class="glow-bg"></div>
+            <img src="1.png" alt="AlaaDev Logo">
+            <span class="tooltip">انقر لعرض النبذة</span>
+        </div>
+
+        <h1 class="main-title">
+            <span class="color-blue">AlaaDev</span> 
+            <span class="hub-text">Hub</span>
+        </h1>
+        
+        <p id="main-desc" class="main-desc typing-cursor"></p>
+
+        <div id="bio-card" class="bio-card">
+            <div class="bio-glass">
+                <div class="bio-header">
+                    <h3>
+                        <i class="fa-solid fa-user-gear" style="color: #2563eb;"></i> نبذة عني
+                    </h3>
+                    <button onclick="toggleBio()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <p class="bio-text">
+                    أنا <span>علاء</span>، مطور ألعاب ومطور ويب شغوف. أمتلك خبرة واسعة في بناء التطبيقات التفاعلية، تصميم واجهات المستخدم العصرية، وتحويل الأفكار المعقدة إلى برمجيات سلسة ذات أداء عالي.
+                </p>
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <a href="community.html" class="btn btn-discord">
+                <i class="fa-brands fa-discord" style="font-size: 1.25rem;"></i>
+                <span>إنضم لمجتمعنا</span>
+            </a>
+
+            <a href="contact.html" class="btn btn-contact">
+                <i class="fa-regular fa-envelope" style="font-size: 1.125rem; color: #3b82f6;"></i>
+                <span>تواصل معنا</span>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        const textToType = "مساحة الإبداع والتطوير. نبرمج الأفكار ونبني عوالم رقمية متكاملة.";
+        let charIndex = 0;
+        const speed = 45;
+
+        function typeWriter() {
+            if (charIndex < textToType.length) {
+                document.getElementById("main-desc").textContent += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(typeWriter, 500);
+        });
+
+        function toggleBio() {
+            const bioCard = document.getElementById('bio-card');
+            const mainDesc = document.getElementById('main-desc');
+
+            bioCard.classList.toggle('show');
+            
+            if (bioCard.classList.contains('show')) {
+                mainDesc.style.opacity = '0.3';
+            } else {
+                mainDesc.style.opacity = '1';
+            }
+        }
+    </script>
+
+</body>
+</html>
+

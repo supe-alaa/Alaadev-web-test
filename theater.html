@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlaaDev - المسرح</title>
+    
+    <!-- خط تجوال -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- مكتبة الأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* إعدادات عامة */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f8fc;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Tajawal', sans-serif;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            body {
+                padding: 2rem;
+            }
+        }
+
+        /* تأثيرات الضباب الخلفي */
+        .blue-fog {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .fog-top-right {
+            background: rgba(59, 130, 246, 0.22);
+            width: 450px;
+            height: 450px;
+            top: -120px;
+            right: -120px;
+        }
+        .fog-bottom-left {
+            background: rgba(96, 165, 250, 0.18);
+            width: 400px;
+            height: 400px;
+            bottom: -120px;
+            left: -120px;
+        }
+
+        /* بطاقة الزجاج (Glassmorphism) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 25px 50px -12px rgba(30, 64, 175, 0.12);
+            width: 100%;
+            max-width: 28rem;
+            border-radius: 2.5rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            margin: auto;
+        }
+
+        @media (min-width: 640px) {
+            .glass-card {
+                max-width: 32rem;
+                padding: 2.5rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .glass-card {
+                padding: 3rem;
+            }
+        }
+
+        /* حاوية الأيقونة المتحركة */
+        .icon-box {
+            width: 7rem;
+            height: 7rem;
+            border-radius: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ffffff;
+            position: relative;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 100ms, bounceSlow 3s infinite;
+            opacity: 0;
+        }
+
+        @media (min-width: 640px) {
+            .icon-box {
+                width: 8rem;
+                height: 8rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        .icon-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 2rem;
+            background: rgba(96, 165, 250, 0.2);
+            filter: blur(12px);
+        }
+
+        .theater-icon {
+            font-size: 3rem;
+            color: #2563eb;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (min-width: 640px) {
+            .theater-icon {
+                font-size: 3.75rem;
+            }
+        }
+
+        /* العناوين والنصوص */
+        .main-title {
+            font-size: 1.875rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+            text-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 200ms;
+            opacity: 0;
+        }
+
+        @media (min-width: 640px) {
+            .main-title {
+                font-size: 2.25rem;
+            }
+        }
+
+        .text-blue {
+            color: #2563eb;
+        }
+
+        .hub-text {
+            color: #ffffff;
+            -webkit-text-stroke: 1.5px #000000;
+            text-stroke: 1.5px #000000;
+            paint-order: stroke fill;
+        }
+
+        /* شارة قريباً */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #eff6ff;
+            border: 1px solid rgba(191, 219, 254, 0.8);
+            padding: 0.375rem 1rem;
+            border-radius: 9999px;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 200ms;
+            opacity: 0;
+        }
+
+        .badge-dot {
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 9999px;
+            background-color: #f59e0b;
+            animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        .badge-text {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+
+        @media (min-width: 640px) {
+            .badge-text {
+                font-size: 0.875rem;
+            }
+        }
+
+        /* الوصف */
+        .description {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            max-width: 16rem;
+            line-height: 1.625;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 300ms;
+            opacity: 0;
+        }
+
+        @media (min-width: 640px) {
+            .description {
+                font-size: 1rem;
+                max-width: 20rem;
+            }
+        }
+
+        /* زر العودة */
+        .home-button {
+            width: 100%;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.875rem 1.5rem;
+            border-radius: 1rem;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 300ms;
+            opacity: 0;
+        }
+
+        .home-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .home-button:active {
+            transform: scale(0.95);
+        }
+
+        /* الحركات (Keyframes) */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceSlow {
+            0%, 100% {
+                transform: translateY(-10%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: none;
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+
+        @keyframes ping {
+            75%, 100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الضباب الأزرق في الخلفية -->
+    <div class="blue-fog fog-top-right"></div>
+    <div class="blue-fog fog-bottom-left"></div>
+
+    <!-- الحاوية الرئيسية -->
+    <main class="glass-card">
+        
+        <!-- أيقونة المسرح المتحركة -->
+        <div class="icon-box">
+            <div class="icon-glow"></div>
+            <i class="fa-solid fa-masks-theater theater-icon"></i>
+        </div>
+
+        <!-- العنوان الرئيسي -->
+        <h1 class="main-title">
+            <span class="text-blue">مسرح</span> 
+            <span class="hub-text">AlaaDev</span>
+        </h1>
+        
+        <!-- شارة قريباً -->
+        <div class="badge">
+            <span class="badge-dot"></span>
+            <span class="badge-text">سيُتوّفر قريباً</span>
+        </div>
+
+        <!-- الوصف -->
+        <p class="description">
+            نعمل حالياً على تجهيز عروض وفعاليات وتجارب تفاعلية مميزة ستعرض هنا قريباً جداً. ترقبوا المفاجآت!
+        </p>
+
+        <!-- زر العودة للرئيسية -->
+        <a href="index.html" class="home-button">
+            <i class="fa-solid fa-house"></i>
+            <span>العودة للرئيسية</span>
+        </a>
+
+    </main>
+
+    <!-- تضمين القائمة الجانبية المشتركة -->
+    <script src="sidebar.js"></script>
+
+</body>
+</html>
+
